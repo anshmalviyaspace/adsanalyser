@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Header, Footer } from "@/components/LandingPage";
 import { Upload, X, ArrowRight, Zap, Loader2 } from "lucide-react";
 import { ResultsView } from "@/components/ResultsView";
+import { analyzeAds } from "@/utils/analyze.functions";
+import type { AnalysisResult } from "@/utils/analyze.functions";
 
 export const Route = createFileRoute("/analyze")({
   head: () => ({
@@ -19,18 +21,6 @@ export const Route = createFileRoute("/analyze")({
 });
 
 type AppState = "input" | "processing" | "results";
-
-interface AnalysisResult {
-  campaignState: string;
-  bestPerformer: { name: string; reason: string };
-  worstPerformer: { name: string; reason: string };
-  decision: string;
-  reason: string;
-  actionPlan: string[];
-  riskLevel: "low" | "medium" | "high";
-  confidenceScore: number;
-  dataConfidence: "High" | "Medium" | "Low";
-}
 
 function AnalyzePage() {
   const [state, setState] = useState<AppState>("input");
@@ -63,6 +53,8 @@ function AnalyzePage() {
     setImagePreview(null);
   };
 
+  const [error, setError] = useState<string | null>(null);
+
   const processingSteps = [
     "Reading your ad account...",
     "Extracting data...",
@@ -74,37 +66,46 @@ function AnalyzePage() {
     if (!image || !objective) return;
     setState("processing");
     setProcessingStep(0);
+    setError(null);
 
-    for (let i = 0; i < processingSteps.length; i++) {
-      setProcessingStep(i);
-      await new Promise((r) => setTimeout(r, 1200 + Math.random() * 800));
-    }
-
-    // Mock results — replace with Vellum API call
-    setResults({
-      campaignState: "Scaling Phase",
-      bestPerformer: {
-        name: "Ad Set: Lookalike 1% — Video Creative A",
-        reason: "Lowest CPA at $12.40 with consistent delivery and 3.2x ROAS over last 7 days.",
-      },
-      worstPerformer: {
-        name: "Ad Set: Interest Stack — Static Image B",
-        reason: "CPA spiked to $45.20 with declining CTR (0.6%) — learning phase stuck for 5 days.",
-      },
-      decision: "Kill the underperformer. Scale the winner by 20%.",
-      reason: "The winning ad set has proven stability. The underperformer is draining budget with no signs of recovery.",
-      actionPlan: [
-        "Turn off 'Interest Stack — Static Image B' immediately",
-        "Increase daily budget on 'Lookalike 1% — Video Creative A' by 20%",
-        "Duplicate winning ad set with new 2% lookalike audience",
-        "Monitor new ad set for 48 hours before further scaling",
-        "Review results again in 3 days",
-      ],
-      riskLevel: "low",
-      confidenceScore: 87,
-      dataConfidence: "High",
+    // Convert image to base64 data URL
+    const reader = new FileReader();
+    const imageBase64: string = await new Promise((resolve, reject) => {
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(image);
     });
-    setState("results");
+
+    // Animate processing steps while API call runs
+    const stepInterval = setInterval(() => {
+      setProcessingStep((prev) => Math.min(prev + 1, processingSteps.length - 1));
+    }, 2000);
+
+    try {
+      const response = await analyzeAds({
+        data: {
+          imageBase64,
+          objective: objective as "leads" | "purchases",
+          targetValue: targetValue || undefined,
+        },
+      });
+
+      clearInterval(stepInterval);
+
+      if (response.error) {
+        setError(response.error);
+        setState("input");
+        return;
+      }
+
+      setResults(response.result);
+      setProcessingStep(processingSteps.length - 1);
+      setState("results");
+    } catch (err: any) {
+      clearInterval(stepInterval);
+      setError(err.message || "Analysis failed. Please try again.");
+      setState("input");
+    }
   };
 
   const reset = () => {
@@ -126,6 +127,12 @@ function AnalyzePage() {
               <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Analyze Your Ads</h1>
               <p className="mt-3 text-muted-foreground">Upload a screenshot and set your goals.</p>
             </div>
+
+            {error && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+                {error}
+              </div>
+            )}
 
             {/* Upload */}
             <Card>

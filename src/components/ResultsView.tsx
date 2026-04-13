@@ -1,18 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Target, BarChart3, Shield, Gauge } from "lucide-react";
-
-interface AnalysisResult {
-  campaignState: string;
-  bestPerformer: { name: string; reason: string };
-  worstPerformer: { name: string; reason: string };
-  decision: string;
-  reason: string;
-  actionPlan: string[];
-  riskLevel: "low" | "medium" | "high";
-  confidenceScore: number;
-  dataConfidence: "High" | "Medium" | "Low";
-}
+import type { AnalysisResult } from "@/utils/analyze.functions";
 
 interface ResultsViewProps {
   results: AnalysisResult;
