@@ -128,6 +128,12 @@ function AnalyzePage() {
               <p className="mt-3 text-muted-foreground">Upload a screenshot and set your goals.</p>
             </div>
 
+            {error && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+                {error}
+              </div>
+            )}
+
             {/* Upload */}
             <Card>
               <CardContent className="p-6">
