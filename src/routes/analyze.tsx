@@ -106,7 +106,6 @@ function AnalyzePage() {
       setError(err.message || "Analysis failed. Please try again.");
       setState("input");
     }
-    setState("results");
   };
 
   const reset = () => {
