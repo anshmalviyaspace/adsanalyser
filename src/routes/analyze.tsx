@@ -22,18 +22,6 @@ export const Route = createFileRoute("/analyze")({
 
 type AppState = "input" | "processing" | "results";
 
-interface AnalysisResult {
-  campaignState: string;
-  bestPerformer: { name: string; reason: string };
-  worstPerformer: { name: string; reason: string };
-  decision: string;
-  reason: string;
-  actionPlan: string[];
-  riskLevel: "low" | "medium" | "high";
-  confidenceScore: number;
-  dataConfidence: "High" | "Medium" | "Low";
-}
-
 function AnalyzePage() {
   const [state, setState] = useState<AppState>("input");
   const [image, setImage] = useState<File | null>(null);
