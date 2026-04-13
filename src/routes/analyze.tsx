@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Header, Footer } from "@/components/LandingPage";
 import { Upload, X, ArrowRight, Zap, Loader2 } from "lucide-react";
 import { ResultsView } from "@/components/ResultsView";
+import { analyzeAds } from "@/utils/analyze.functions";
+import type { AnalysisResult } from "@/utils/analyze.functions";
 
 export const Route = createFileRoute("/analyze")({
   head: () => ({
