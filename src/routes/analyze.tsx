@@ -26,6 +26,7 @@ export const Route = createFileRoute("/analyze")({
 type AppState = "input" | "processing" | "results";
 
 function AnalyzePage() {
+  const { user, session } = useAuth();
   const [state, setState] = useState<AppState>("input");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
