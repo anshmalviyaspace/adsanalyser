@@ -6,6 +6,9 @@ import { Header, Footer } from "@/components/LandingPage";
 import { Upload, X, ArrowRight, Zap, Loader2 } from "lucide-react";
 import { ResultsView } from "@/components/ResultsView";
 import { analyzeAds } from "@/utils/analyze.functions";
+import { saveAnalysis } from "@/utils/saveAnalysis.functions";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import type { AnalysisResult } from "@/utils/analyze.functions";
 
 export const Route = createFileRoute("/analyze")({
