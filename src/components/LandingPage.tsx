@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Upload, Zap, Target, Shield, ArrowRight, CheckCircle } from "lucide-react";
+import { Upload, Zap, Target, Shield, ArrowRight, CheckCircle, LogOut, History } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Header() {
+  const { user, signOut, loading } = useAuth();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -12,12 +15,33 @@ export function Header() {
           </div>
           <span className="text-lg font-bold text-foreground">AI Ad Doctor</span>
         </Link>
-        <Link to="/analyze">
-          <Button variant="hero" size="default">
-            Get Started
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          {!loading && user && (
+            <>
+              <Link to="/history">
+                <Button variant="ghost" size="sm">
+                  <History className="h-4 w-4 mr-1" />
+                  History
+                </Button>
+              </Link>
+              <Button variant="ghost" size="sm" onClick={signOut}>
+                <LogOut className="h-4 w-4 mr-1" />
+                Sign Out
+              </Button>
+            </>
+          )}
+          {!loading && !user && (
+            <Link to="/login">
+              <Button variant="outline" size="sm">Sign In</Button>
+            </Link>
+          )}
+          <Link to="/analyze">
+            <Button variant="hero" size="default">
+              Get Started
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
       </div>
     </header>
   );

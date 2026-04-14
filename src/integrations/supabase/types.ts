@@ -14,7 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      analyses: {
+        Row: {
+          action_plan: Json
+          best_performer: Json
+          campaign_state: string
+          confidence_score: number
+          created_at: string
+          data_confidence: string
+          decision: string
+          id: string
+          objective: string
+          reason: string
+          risk_level: string
+          target_value: string | null
+          user_id: string
+          worst_performer: Json
+        }
+        Insert: {
+          action_plan: Json
+          best_performer: Json
+          campaign_state: string
+          confidence_score: number
+          created_at?: string
+          data_confidence: string
+          decision: string
+          id?: string
+          objective: string
+          reason: string
+          risk_level: string
+          target_value?: string | null
+          user_id: string
+          worst_performer: Json
+        }
+        Update: {
+          action_plan?: Json
+          best_performer?: Json
+          campaign_state?: string
+          confidence_score?: number
+          created_at?: string
+          data_confidence?: string
+          decision?: string
+          id?: string
+          objective?: string
+          reason?: string
+          risk_level?: string
+          target_value?: string | null
+          user_id?: string
+          worst_performer?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

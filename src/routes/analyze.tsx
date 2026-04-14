@@ -6,6 +6,9 @@ import { Header, Footer } from "@/components/LandingPage";
 import { Upload, X, ArrowRight, Zap, Loader2 } from "lucide-react";
 import { ResultsView } from "@/components/ResultsView";
 import { analyzeAds } from "@/utils/analyze.functions";
+import { saveAnalysis } from "@/utils/saveAnalysis.functions";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import type { AnalysisResult } from "@/utils/analyze.functions";
 
 export const Route = createFileRoute("/analyze")({
@@ -23,6 +26,7 @@ export const Route = createFileRoute("/analyze")({
 type AppState = "input" | "processing" | "results";
 
 function AnalyzePage() {
+  const { user, session } = useAuth();
   const [state, setState] = useState<AppState>("input");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -101,6 +105,30 @@ function AnalyzePage() {
       setResults(response.result);
       setProcessingStep(processingSteps.length - 1);
       setState("results");
+
+      // Save to database if user is logged in
+      if (session?.access_token && response.result) {
+        try {
+          await saveAnalysis({
+            data: {
+              objective: objective,
+              targetValue: targetValue || undefined,
+              campaignState: response.result.campaignState,
+              bestPerformer: response.result.bestPerformer,
+              worstPerformer: response.result.worstPerformer,
+              decision: response.result.decision,
+              reason: response.result.reason,
+              actionPlan: response.result.actionPlan,
+              riskLevel: response.result.riskLevel,
+              confidenceScore: response.result.confidenceScore,
+              dataConfidence: response.result.dataConfidence,
+            },
+            headers: { Authorization: `Bearer ${session.access_token}` },
+          });
+        } catch (saveErr) {
+          console.error("Failed to save analysis:", saveErr);
+        }
+      }
     } catch (err: any) {
       clearInterval(stepInterval);
       setError(err.message || "Analysis failed. Please try again.");
