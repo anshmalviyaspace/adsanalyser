@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header, Footer } from "@/components/LandingPage";
-import { Upload, X, ArrowRight, Zap, Loader2 } from "lucide-react";
+import { Upload, X, ArrowRight, Zap, Loader2, Lock } from "lucide-react";
 import { ResultsView } from "@/components/ResultsView";
 import { analyzeAds } from "@/utils/analyze.functions";
 import { saveAnalysis } from "@/utils/saveAnalysis.functions";
+import { checkCredits, consumeCredit } from "@/utils/credits.functions";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import type { AnalysisResult } from "@/utils/analyze.functions";
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/analyze")({
 type AppState = "input" | "processing" | "results";
 
 function AnalyzePage() {
-  const { user, session } = useAuth();
+  const { user, session, loading } = useAuth();
   const [state, setState] = useState<AppState>("input");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -34,6 +35,20 @@ function AnalyzePage() {
   const [targetValue, setTargetValue] = useState<string>("");
   const [processingStep, setProcessingStep] = useState(0);
   const [results, setResults] = useState<AnalysisResult | null>(null);
+  const [creditsRemaining, setCreditsRemaining] = useState<number | null>(null);
+  const [creditsLoading, setCreditsLoading] = useState(false);
+
+  // Check credits when user is authenticated
+  useEffect(() => {
+    if (!session?.access_token) return;
+    setCreditsLoading(true);
+    checkCredits({ headers: { Authorization: `Bearer ${session.access_token}` } })
+      .then((res) => {
+        setCreditsRemaining(res.remaining ?? 0);
+      })
+      .catch(() => setCreditsRemaining(0))
+      .finally(() => setCreditsLoading(false));
+  }, [session?.access_token]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
