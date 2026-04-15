@@ -16,6 +16,9 @@ export function Header() {
           <span className="text-lg font-bold text-foreground">AI Ad Doctor</span>
         </Link>
         <div className="flex items-center gap-3">
+          <Link to="/pricing">
+            <Button variant="ghost" size="sm">Pricing</Button>
+          </Link>
           {!loading && user && (
             <>
               <Link to="/history">
