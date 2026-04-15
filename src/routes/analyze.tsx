@@ -177,11 +177,54 @@ function AnalyzePage() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="mx-auto max-w-3xl px-6 pt-28 pb-20">
-        {state === "input" && (
+        {/* Sign-in gate */}
+        {!loading && !user && state === "input" && (
+          <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+              <Lock className="h-8 w-8 text-primary" />
+            </div>
+            <h2 className="mt-6 text-2xl font-bold text-foreground">Sign In Required</h2>
+            <p className="mt-3 max-w-md text-muted-foreground">
+              Sign in to get your free ad analysis. You get 1 free analysis to try it out.
+            </p>
+            <Link to="/login" className="mt-8">
+              <Button variant="hero" size="xl">
+                Sign In to Analyze
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        {/* Credits exhausted */}
+        {!loading && user && creditsRemaining === 0 && !creditsLoading && state === "input" && (
+          <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-warning/10">
+              <Zap className="h-8 w-8 text-warning" />
+            </div>
+            <h2 className="mt-6 text-2xl font-bold text-foreground">No Credits Remaining</h2>
+            <p className="mt-3 max-w-md text-muted-foreground">
+              You've used your free analysis. Upgrade your plan to continue analyzing ads.
+            </p>
+            <Link to="/pricing" className="mt-8">
+              <Button variant="hero" size="xl">
+                View Plans
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        {!loading && user && (creditsRemaining === null || creditsRemaining > 0) && state === "input" && (
           <div className="space-y-8">
             <div className="text-center">
               <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Analyze Your Ads</h1>
               <p className="mt-3 text-muted-foreground">Upload a screenshot and set your goals.</p>
+              {creditsRemaining !== null && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {creditsRemaining} {creditsRemaining === 1 ? "analysis" : "analyses"} remaining
+                </p>
+              )}
             </div>
 
             {error && (
