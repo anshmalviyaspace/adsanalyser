@@ -82,7 +82,20 @@ function AnalyzePage() {
   ];
 
   const startAnalysis = async () => {
-    if (!image || !objective) return;
+    if (!image || !objective || !session?.access_token) return;
+
+    // Consume a credit first
+    try {
+      const creditResult = await consumeCredit({ headers: { Authorization: `Bearer ${session.access_token}` } });
+      if (!creditResult.success) {
+        setError(creditResult.error || "No credits remaining. Please upgrade your plan.");
+        return;
+      }
+    } catch {
+      setError("Failed to verify credits. Please try again.");
+      return;
+    }
+
     setState("processing");
     setProcessingStep(0);
     setError(null);
