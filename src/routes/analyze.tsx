@@ -133,6 +133,10 @@ function AnalyzePage() {
       setResults(response.result);
       setProcessingStep(processingSteps.length - 1);
       setState("results");
+      // Update remaining credits
+      if (creditsRemaining !== null) {
+        setCreditsRemaining(Math.max(0, creditsRemaining - 1));
+      }
 
       // Save to database if user is logged in
       if (session?.access_token && response.result) {
