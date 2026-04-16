@@ -40,6 +40,10 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "AI Ad Doctor" },
+      { name: "twitter:description", content: "Upload your Meta Ads screenshot and get instant, actionable recommendations." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/eJgcDqOUclP7TvIFj7qGWyNum0C2/social-images/social-1776310071714-Screenshot_2026-04-13_225844.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/eJgcDqOUclP7TvIFj7qGWyNum0C2/social-images/social-1776310071714-Screenshot_2026-04-13_225844.webp" },
     ],
     links: [
       {
