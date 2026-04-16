@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Upload, Zap, Target, Shield, ArrowRight, CheckCircle, LogOut, History } from "lucide-react";
+import { Upload, Target, Shield, ArrowRight, CheckCircle, LogOut, History } from "lucide-react";
+import appLogo from "@/assets/logo.png";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
