@@ -126,6 +126,7 @@ function AnalyzePage() {
           objective: objective as "leads" | "purchases",
           targetValue: targetValue || undefined,
         },
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
 
       clearInterval(stepInterval);

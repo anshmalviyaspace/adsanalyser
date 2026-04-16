@@ -39,7 +39,7 @@ export const saveAnalysis = createServerFn({ method: "POST" })
 
     if (error) {
       console.error("Failed to save analysis:", error);
-      return { saved: false, error: error.message };
+      return { saved: false, error: "Failed to save analysis. Please try again." };
     }
 
     return { saved: true, error: null };
