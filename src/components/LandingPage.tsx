@@ -322,13 +322,11 @@ export function Footer() {
   return (
     <footer className="border-t border-border py-8 px-6">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-            <Zap className="h-3.5 w-3.5 text-primary-foreground" />
-          </div>
-          <span className="text-sm font-semibold text-foreground">AI Ad Doctor</span>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+          <span>Powered by <a href="https://webcommedia.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">Webcom Media</a></span>
         </div>
-        <p className="text-sm text-muted-foreground">© 2026 AI Ad Doctor. All rights reserved.</p>
+        <p className="text-sm text-muted-foreground">© 2026 All rights reserved.</p>
       </div>
     </footer>
   );
