@@ -24,7 +24,7 @@ export const Route = createFileRoute("/analyze")({
   component: AnalyzePage,
 });
 
-type AppState = "input" | "processing" | "results";
+type AppState = "input" | "processing" | "results" | "signin-prompt";
 
 function AnalyzePage() {
   const { user, session, loading } = useAuth();
