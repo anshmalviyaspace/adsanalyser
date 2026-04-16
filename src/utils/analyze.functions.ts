@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
 const inputSchema = z.object({
@@ -44,6 +45,7 @@ Focus on actionable, specific recommendations. Be direct and decisive. Do not he
 Return ONLY valid JSON, no markdown or extra text.`;
 
 export const analyzeAds = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((input: z.infer<typeof inputSchema>) => inputSchema.parse(input))
   .handler(async ({ data }) => {
     const apiKey = process.env.VELLUM_API_KEY;
@@ -119,7 +121,6 @@ async function fallbackAnalysis(
   apiKey: string,
   data: z.infer<typeof inputSchema>
 ): Promise<{ result: AnalysisResult; error: string | null }> {
-  // Try Vellum's generate endpoint as fallback
   const userPrompt = `Campaign Objective: ${data.objective === "leads" ? "Lead Generation" : "Purchases/Conversions"}
 ${data.targetValue ? `Target: ${data.targetValue}` : "No specific target set."}
 
@@ -163,7 +164,7 @@ Analyze this Meta Ads screenshot and provide recommendations.`;
   } catch (error) {
     console.error("Fallback analysis failed:", error);
     throw new Error(
-      "Unable to analyze the screenshot. Please ensure your Vellum deployment 'ad-doctor-analysis' is configured, or check your API key."
+      "Unable to analyze the screenshot. Please try again later."
     );
   }
 }
