@@ -82,7 +82,13 @@ function AnalyzePage() {
   ];
 
   const startAnalysis = async () => {
-    if (!image || !objective || !session?.access_token) return;
+    if (!image || !objective) return;
+
+    // If not signed in, show sign-in prompt
+    if (!user || !session?.access_token) {
+      setState("signin-prompt");
+      return;
+    }
 
     // Consume a credit first
     try {
