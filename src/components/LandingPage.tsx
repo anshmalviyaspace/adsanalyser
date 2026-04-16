@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Upload, Zap, Target, Shield, ArrowRight, CheckCircle, LogOut, History } from "lucide-react";
+import appLogo from "@/assets/logo.png";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
@@ -38,9 +39,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Zap className="h-4 w-4 text-primary-foreground" />
-          </div>
+          <img src={appLogo} alt="AI Ad Doctor" className="h-8 w-8 object-contain" />
           <span className="text-lg font-bold text-foreground">AI Ad Doctor</span>
         </Link>
         <div className="flex items-center gap-3">
