@@ -6,8 +6,9 @@ import { Header, Footer } from "@/components/LandingPage";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
-import { Zap, Mail, Loader2 } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
 import { useEffect } from "react";
+import appLogo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -88,9 +89,7 @@ function LoginPage() {
       <Header />
       <main className="mx-auto max-w-md px-6 pt-28 pb-20">
         <div className="text-center mb-8">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 mb-4">
-            <Zap className="h-6 w-6 text-primary" />
-          </div>
+          <img src={appLogo} alt="AI Ad Doctor" className="mx-auto h-14 w-14 object-contain mb-4" />
           <h1 className="text-2xl font-bold text-foreground">
             {isSignUp ? "Create your account" : "Welcome back"}
           </h1>
