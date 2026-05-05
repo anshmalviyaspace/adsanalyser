@@ -87,7 +87,7 @@ function LoginPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-md px-6 pt-28 pb-20">
+        <main className="mx-auto max-w-md px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-20">
         <div className="text-center mb-8">
           <img src={appLogo} alt="AI Ad Doctor" className="mx-auto h-14 w-14 object-contain mb-4" />
           <h1 className="text-2xl font-bold text-foreground">
