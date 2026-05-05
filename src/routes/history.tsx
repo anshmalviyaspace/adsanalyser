@@ -74,8 +74,8 @@ function HistoryPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-3xl px-6 pt-28 pb-20">
-        <div className="flex items-center justify-between mb-8">
+      <main className="mx-auto max-w-3xl px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-20">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Analysis History</h1>
             <p className="mt-1 text-muted-foreground text-sm">{analyses.length} analyses</p>
