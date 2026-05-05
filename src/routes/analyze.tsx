@@ -187,7 +187,6 @@ function AnalyzePage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-3xl px-6 pt-28 pb-20">
       <main className="mx-auto max-w-3xl px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-20">
         {/* Sign-in prompt (shown as overlay when user tries to analyze without auth) */}
         {!loading && !user && state === "signin-prompt" && (
