@@ -137,6 +137,7 @@ function PricingPage() {
                   ))}
                 </ul>
 
+                <Link to="/login">
                 <Button
                   variant={plan.popular ? "hero" : "hero-outline"}
                   size="lg"
@@ -144,6 +145,7 @@ function PricingPage() {
                 >
                   {plan.cta}
                 </Button>
+                </Link>
               </div>
             ))}
           </div>
