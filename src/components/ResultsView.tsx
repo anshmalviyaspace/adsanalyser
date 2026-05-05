@@ -102,7 +102,7 @@ export function ResultsView({ results, onReset }: ResultsViewProps) {
       </Card>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-5 text-center">
             <Shield className="mx-auto h-5 w-5 text-muted-foreground mb-2" />
