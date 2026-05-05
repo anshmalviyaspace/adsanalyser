@@ -72,6 +72,7 @@ function PricingPage() {
     <div className="min-h-screen bg-background">
       <Header />
       <section className="px-6 pt-28 pb-24">
+      <section className="px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-24">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-wider text-primary">
