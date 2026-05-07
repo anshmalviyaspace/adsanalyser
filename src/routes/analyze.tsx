@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header, Footer } from "@/components/LandingPage";
@@ -28,6 +28,11 @@ type AppState = "input" | "processing" | "results" | "signin-prompt";
 
 function AnalyzePage() {
   const { user, session, loading } = useAuth();
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const [state, setState] = useState<AppState>("input");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -189,7 +194,7 @@ function AnalyzePage() {
       <Header />
       <main className="mx-auto max-w-3xl px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-20">
         {/* Sign-in prompt (shown as overlay when user tries to analyze without auth) */}
-        {!loading && !user && state === "signin-prompt" && (
+        {isClient && !loading && !user && state === "signin-prompt" && (
           <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
               <Lock className="h-8 w-8 text-primary" />
@@ -213,7 +218,7 @@ function AnalyzePage() {
         )}
 
         {/* Credits exhausted */}
-        {!loading && user && creditsRemaining === 0 && !creditsLoading && state === "input" && (
+        {isClient && !loading && user && creditsRemaining === 0 && !creditsLoading && state === "input" && (
           <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-warning/10">
               <Zap className="h-8 w-8 text-warning" />
