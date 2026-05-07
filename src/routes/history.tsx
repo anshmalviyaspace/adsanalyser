@@ -120,7 +120,7 @@ function HistoryPage() {
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        {new Date(a.created_at).toLocaleDateString()}
+                        {new Date(a.created_at).toLocaleDateString("en-IN")}
                       </span>
                       <button
                         onClick={() => deleteAnalysis(a.id)}

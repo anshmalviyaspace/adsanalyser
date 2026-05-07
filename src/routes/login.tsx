@@ -35,6 +35,7 @@ function LoginPage() {
       navigate({ to: "/analyze" });
     }
   }, [user, loading, navigate]);
+  // Show a brief loading state only while checking auth, but still render the page structure
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,14 +76,6 @@ function LoginPage() {
       setError(err.message || "Google sign-in failed.");
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
