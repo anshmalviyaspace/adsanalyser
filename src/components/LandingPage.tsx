@@ -1,13 +1,22 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Upload, Zap, Target, Shield, ArrowRight, CheckCircle, LogOut, History, Menu, X } from "lucide-react";
+import { Upload, Zap, Target, Shield, ArrowRight, CheckCircle, LogOut, History, Menu, X, User } from "lucide-react";
 import appLogo from "@/assets/logo.png";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 export function Header() {
   const { user, signOut, loading } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  // Prevent hydration mismatch: only show auth-dependent UI on client
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+  const showAuthUI = isClient && !loading;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-500">
@@ -30,7 +39,7 @@ export function Header() {
           <Link to="/pricing">
             <Button variant="ghost" size="sm">Pricing</Button>
           </Link>
-          {!loading && user && (
+          {showAuthUI && user && (
             <>
               <Link to="/history">
                 <Button variant="ghost" size="sm">
@@ -44,7 +53,7 @@ export function Header() {
               </Button>
             </>
           )}
-          {!loading && !user && (
+          {showAuthUI && !user && (
             <Link to="/login">
               <Button variant="outline" size="sm">Sign In</Button>
             </Link>
@@ -64,7 +73,7 @@ export function Header() {
           <Link to="/pricing" onClick={() => setMenuOpen(false)}>
             <Button variant="ghost" size="sm" className="w-full justify-start">Pricing</Button>
           </Link>
-          {!loading && user && (
+          {showAuthUI && user && (
             <>
               <Link to="/history" onClick={() => setMenuOpen(false)}>
                 <Button variant="ghost" size="sm" className="w-full justify-start">
@@ -78,7 +87,7 @@ export function Header() {
               </Button>
             </>
           )}
-          {!loading && !user && (
+          {showAuthUI && !user && (
             <Link to="/login" onClick={() => setMenuOpen(false)}>
               <Button variant="outline" size="sm" className="w-full">Sign In</Button>
             </Link>
