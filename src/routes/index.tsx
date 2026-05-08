@@ -5,6 +5,7 @@ import {
   StatsSection,
   FeaturesSection,
   HowItWorksSection,
+  TrustSection,
   CTASection,
   Footer,
 } from "@/components/LandingPage";
@@ -29,6 +30,7 @@ function Index() {
       <StatsSection />
       <FeaturesSection />
       <HowItWorksSection />
+      <TrustSection />
       <CTASection />
       <Footer />
     </div>
