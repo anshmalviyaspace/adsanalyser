@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header, Footer } from "@/components/LandingPage";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Sparkles, Crown, Building2, ArrowLeft } from "lucide-react";
+import { CheckCircle, Sparkles, Crown, Building2, Shield, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -82,7 +82,7 @@ function PricingPage() {
               <span className="text-gradient-primary">Growth Plan</span>
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-              Start with 1 free analysis. Upgrade to unlock more AI-powered ad recommendations.
+              Flexible, one-time credit packs for teams of any size. Start with 1 free analysis — no credit card required.
             </p>
           </div>
 
@@ -150,10 +150,15 @@ function PricingPage() {
             ))}
           </div>
 
-          <p className="mt-12 text-center text-sm text-muted-foreground">
-            All plans are one-time payments. No recurring charges. Secure
-            payments via Razorpay.
-          </p>
+          <div className="mt-14 text-center space-y-3">
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Lock className="h-4 w-4" /> Secure Payments via Razorpay</span>
+              <span className="flex items-center gap-1.5"><Shield className="h-4 w-4" /> 100% Money-Back Guarantee</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              All plans are one-time payments. No subscriptions. No hidden charges. GST invoice provided.
+            </p>
+          </div>
         </div>
       </section>
       <Footer />
