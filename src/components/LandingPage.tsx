@@ -69,17 +69,17 @@ export function Header() {
       {/* Mobile nav */}
       {menuOpen && (
         <div className="sm:hidden border-t border-border/40 bg-background/98 backdrop-blur-xl px-4 py-4 space-y-2">
-          <Link to="/pricing" onClick={() => setMenuOpen(false)}>
-            <Button variant="ghost" size="sm" className="w-full justify-start">Pricing</Button>
-          </Link>
+          <Button asChild variant="ghost" size="sm" className="w-full justify-start">
+            <Link to="/pricing" onClick={() => setMenuOpen(false)}>Pricing</Link>
+          </Button>
           {showAuthUI && user && (
             <>
-              <Link to="/history" onClick={() => setMenuOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full justify-start">
+              <Button asChild variant="ghost" size="sm" className="w-full justify-start">
+                <Link to="/history" onClick={() => setMenuOpen(false)}>
                   <History className="h-4 w-4 mr-1" />
                   History
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => { signOut(); setMenuOpen(false); }}>
                 <LogOut className="h-4 w-4 mr-1" />
                 Sign Out
@@ -87,16 +87,16 @@ export function Header() {
             </>
           )}
           {showAuthUI && !user && (
-            <Link to="/login" onClick={() => setMenuOpen(false)}>
-              <Button variant="outline" size="sm" className="w-full">Sign In</Button>
-            </Link>
+            <Button asChild variant="outline" size="sm" className="w-full">
+              <Link to="/login" onClick={() => setMenuOpen(false)}>Sign In</Link>
+            </Button>
           )}
-          <Link to="/analyze" onClick={() => setMenuOpen(false)}>
-            <Button variant="hero" size="default" className="w-full">
+          <Button asChild variant="hero" size="default" className="w-full">
+            <Link to="/analyze" onClick={() => setMenuOpen(false)}>
               Get Started
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       )}
     </header>
