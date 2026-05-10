@@ -14,7 +14,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LegalLayoutRouteImport } from './routes/legal/_layout'
 
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
@@ -41,11 +40,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LegalLayoutRoute = LegalLayoutRouteImport.update({
-  id: '/legal/_layout',
-  path: '/legal',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,7 +47,6 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/legal': typeof LegalLayoutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +54,6 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/legal': typeof LegalLayoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,21 +62,13 @@ export interface FileRoutesById {
   '/history': typeof HistoryRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/legal/_layout': typeof LegalLayoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyze' | '/history' | '/login' | '/pricing' | '/legal'
+  fullPaths: '/' | '/analyze' | '/history' | '/login' | '/pricing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyze' | '/history' | '/login' | '/pricing' | '/legal'
-  id:
-    | '__root__'
-    | '/'
-    | '/analyze'
-    | '/history'
-    | '/login'
-    | '/pricing'
-    | '/legal/_layout'
+  to: '/' | '/analyze' | '/history' | '/login' | '/pricing'
+  id: '__root__' | '/' | '/analyze' | '/history' | '/login' | '/pricing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,7 +77,6 @@ export interface RootRouteChildren {
   HistoryRoute: typeof HistoryRoute
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
-  LegalLayoutRoute: typeof LegalLayoutRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,13 +116,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/legal/_layout': {
-      id: '/legal/_layout'
-      path: '/legal'
-      fullPath: '/legal'
-      preLoaderRoute: typeof LegalLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -149,7 +125,6 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryRoute: HistoryRoute,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
-  LegalLayoutRoute: LegalLayoutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
