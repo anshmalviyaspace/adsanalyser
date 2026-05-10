@@ -352,19 +352,22 @@ export function Footer() {
             <div>
               <p className="font-semibold text-foreground mb-3">Legal</p>
               <ul className="space-y-2 text-muted-foreground">
-                <li><span className="cursor-default">Privacy Policy</span></li>
-                <li><span className="cursor-default">Terms of Service</span></li>
-                <li><span className="cursor-default">Refund Policy</span></li>
+                <li><Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
+                <li><Link to="/refund" className="hover:text-foreground transition-colors">Refund Policy</Link></li>
               </ul>
             </div>
           </div>
         </div>
         <div className="mt-10 pt-6 border-t border-border/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <p className="text-xs text-muted-foreground">© 2026 AI Ad Doctor by Webcom Media. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© 2026 AI Ad Doctor, a product of Webcom Media. All rights reserved.</p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> SSL Secured</span>
             <span className="flex items-center gap-1"><Shield className="h-3 w-3" /> GDPR</span>
           </div>
+        </div>
+        <div className="mt-4 text-xs text-muted-foreground/80 leading-relaxed">
+          Registered Office: Webcom Media, Mumbai, Maharashtra, India · GSTIN available on invoice · Payments processed securely via Razorpay (PCI-DSS Level 1)
         </div>
       </div>
     </footer>
