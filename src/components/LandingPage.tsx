@@ -306,13 +306,13 @@ export function CTASection() {
         <p className="mt-4 text-base text-primary-foreground/80 sm:text-lg leading-relaxed">
           Join hundreds of performance marketers who trust AI Ad Doctor for data-driven ad decisions.
         </p>
-        <div className="mt-10">
-          <Link to="/analyze" className="inline-block">
-            <Button variant="hero-outline" size="xl" className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20">
+        <div className="mt-10 flex justify-center">
+          <Button asChild variant="hero-outline" size="xl" className="border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20">
+            <Link to="/analyze">
               Start Your Free Analysis
               <ArrowRight className="h-5 w-5" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
         <p className="mt-6 text-xs text-primary-foreground/60">No credit card required · 1 free analysis included</p>
       </div>
