@@ -16,6 +16,7 @@ export const checkCredits = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (error) {
+      console.error("checkCredits error:", error);
       return { canAnalyze: false, remaining: 0, error: "Failed to check credits" };
     }
 
@@ -27,49 +28,21 @@ export const checkCredits = createServerFn({ method: "POST" })
     return { canAnalyze: totalAvailable > 0, remaining: Math.max(0, totalAvailable) };
   });
 
+// Atomic consume — race-safe via SQL function. Returns { success, remaining?, error? }.
 export const consumeCredit = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { userId } = context;
 
-    const { data, error } = await supabaseAdmin
-      .from("user_credits")
-      .select("free_used, purchased_credits")
-      .eq("user_id", userId)
-      .maybeSingle();
+    const { data, error } = await supabaseAdmin.rpc("consume_credit_atomic", {
+      p_user_id: userId,
+    });
 
     if (error) {
-      return { success: false, error: "Failed to check credits" };
+      console.error("consumeCredit RPC error:", error);
+      return { success: false, error: "Failed to consume credit" };
     }
 
-    if (!data) {
-      // First use — create record with free_used = 1
-      const { error: insertErr } = await supabaseAdmin
-        .from("user_credits")
-        .insert({ user_id: userId, free_used: 1, purchased_credits: 0 });
-      if (insertErr) return { success: false, error: "Failed to consume credit" };
-      return { success: true };
-    }
-
-    const freeRemaining = FREE_LIMIT - data.free_used;
-
-    if (freeRemaining > 0) {
-      const { error: updateErr } = await supabaseAdmin
-        .from("user_credits")
-        .update({ free_used: data.free_used + 1, updated_at: new Date().toISOString() })
-        .eq("user_id", userId);
-      if (updateErr) return { success: false, error: "Failed to consume credit" };
-      return { success: true };
-    }
-
-    if (data.purchased_credits > 0) {
-      const { error: updateErr } = await supabaseAdmin
-        .from("user_credits")
-        .update({ purchased_credits: data.purchased_credits - 1, updated_at: new Date().toISOString() })
-        .eq("user_id", userId);
-      if (updateErr) return { success: false, error: "Failed to consume credit" };
-      return { success: true };
-    }
-
-    return { success: false, error: "No credits remaining" };
+    const result = data as { success: boolean; remaining?: number; error?: string };
+    return result;
   });

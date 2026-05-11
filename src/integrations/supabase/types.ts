@@ -65,6 +65,51 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          amount_paise: number
+          created_at: string
+          credits_granted: number
+          currency: string
+          id: string
+          plan: string
+          razorpay_order_id: string
+          razorpay_payment_id: string | null
+          razorpay_signature: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_paise: number
+          created_at?: string
+          credits_granted: number
+          currency?: string
+          id?: string
+          plan: string
+          razorpay_order_id: string
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_paise?: number
+          created_at?: string
+          credits_granted?: number
+          currency?: string
+          id?: string
+          plan?: string
+          razorpay_order_id?: string
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_credits: {
         Row: {
           created_at: string
@@ -97,7 +142,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_credit_atomic: { Args: { p_user_id: string }; Returns: Json }
+      grant_credits_atomic: {
+        Args: { p_credits: number; p_user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
