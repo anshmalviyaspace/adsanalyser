@@ -1,9 +1,32 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Header, Footer } from "@/components/LandingPage";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Lock, Shield, ArrowRight } from "lucide-react";
+import { CheckCircle, Lock, Shield, ArrowRight, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, useState, useEffect } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { createRazorpayOrder, verifyRazorpayPayment } from "@/utils/razorpay.functions";
+import { toast } from "sonner";
+
+type PlanKey = "starter" | "growth" | "scale";
+
+declare global {
+  interface Window {
+    Razorpay?: new (opts: Record<string, unknown>) => { open: () => void };
+  }
+}
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") return resolve(false);
+    if (window.Razorpay) return resolve(true);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -19,6 +42,7 @@ export const Route = createFileRoute("/pricing")({
 
 const plans = [
   {
+    key: "starter" as PlanKey,
     name: "Starter",
     price: "₹499",
     credits: 10,
@@ -33,6 +57,7 @@ const plans = [
     popular: false,
   },
   {
+    key: "growth" as PlanKey,
     name: "Growth",
     price: "₹1,499",
     credits: 50,
@@ -48,6 +73,7 @@ const plans = [
     popular: true,
   },
   {
+    key: "scale" as PlanKey,
     name: "Scale",
     price: "₹4,999",
     credits: 200,
@@ -66,8 +92,71 @@ const plans = [
 
 function PricingPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const isClient = useSyncExternalStore(() => () => {}, () => true, () => false);
-  const ctaTarget = isClient && user ? "/analyze" : "/login";
+  const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
+  const createOrder = useServerFn(createRazorpayOrder);
+  const verifyPayment = useServerFn(verifyRazorpayPayment);
+
+  useEffect(() => {
+    if (isClient) loadRazorpayScript();
+  }, [isClient]);
+
+  const handleCheckout = async (plan: PlanKey) => {
+    if (!user) {
+      navigate({ to: "/login" });
+      return;
+    }
+    setLoadingPlan(plan);
+    try {
+      const ok = await loadRazorpayScript();
+      if (!ok || !window.Razorpay) {
+        toast.error("Could not load payment SDK. Check your connection and retry.");
+        return;
+      }
+      const order = await createOrder({ data: { plan } });
+
+      const rzp = new window.Razorpay({
+        key: order.key_id,
+        amount: order.amount,
+        currency: order.currency,
+        order_id: order.order_id,
+        name: "AI Ad Doctor",
+        description: `${order.plan_label} — ${order.credits} credits`,
+        prefill: {
+          email: user.email ?? "",
+        },
+        theme: { color: "#4f46e5" },
+        handler: async (response: {
+          razorpay_order_id: string;
+          razorpay_payment_id: string;
+          razorpay_signature: string;
+        }) => {
+          try {
+            const result = await verifyPayment({ data: response });
+            if (result.success) {
+              toast.success(`Payment successful — ${order.credits} credits added.`);
+              navigate({ to: "/analyze" });
+            } else {
+              toast.error(result.error ?? "Payment verification failed");
+            }
+          } catch (err) {
+            console.error(err);
+            toast.error("Could not verify payment. Contact support if charged.");
+          }
+        },
+        modal: {
+          ondismiss: () => setLoadingPlan(null),
+        },
+      });
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      toast.error("Could not start checkout. Please try again.");
+    } finally {
+      setLoadingPlan((p) => (p === plan ? null : p));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -123,15 +212,23 @@ function PricingPage() {
                 </ul>
 
                 <Button
-                  asChild
                   variant={plan.popular ? "hero" : "outline"}
                   size="lg"
                   className="mt-8 w-full"
+                  disabled={loadingPlan !== null}
+                  onClick={() => handleCheckout(plan.key)}
                 >
-                  <Link to={ctaTarget}>
-                    Choose {plan.name}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  {loadingPlan === plan.key ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Processing…
+                    </>
+                  ) : (
+                    <>
+                      {user ? `Buy ${plan.name}` : `Choose ${plan.name}`}
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </div>
             ))}
