@@ -104,7 +104,7 @@ function PricingPage() {
 
   const handleCheckout = async (plan: PlanKey) => {
     if (!user) {
-      navigate({ to: "/login", search: { redirect: "/pricing" } as never });
+      navigate({ to: "/login" });
       return;
     }
     setLoadingPlan(plan);
